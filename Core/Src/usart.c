@@ -21,6 +21,32 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include <stdio.h>
+int fputc(int ch, FILE *f)
+{
+	/* 发送一个字节数据到串口 */
+	USART_SendData(DEBUG_USART, (uint8_t) ch);
+
+	/* 等待发送完毕 */
+	while (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_TXE) == RESET)
+	{
+		NULL;
+	}	
+	
+	return (ch);
+}
+
+///重定向c库函数scanf到串口，重写向后可使用scanf、getchar等函数
+int fgetc(FILE *f)
+{
+		/* 等待串口输入数据 */
+		while (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_RXNE) == RESET)
+		{
+			NULL;
+		}
+
+		return (int)USART_ReceiveData(DEBUG_USART);
+}
 
 /* USER CODE END 0 */
 
