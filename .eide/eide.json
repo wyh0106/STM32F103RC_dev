@@ -64,6 +64,18 @@
         ]
       },
       {
+        "name": "BSP",
+        "files": [
+          {
+            "path": "BSP/src/DataPackage.c"
+          },
+          {
+            "path": "BSP/src/w25q64.c"
+          }
+        ],
+        "folders": []
+      },
+      {
         "name": "Drivers",
         "files": [],
         "folders": [
@@ -197,7 +209,8 @@
           "Drivers/CMSIS/Include",
           ".cmsis/include",
           "MDK-ARM/RTE/_f103_uart_test",
-          ".eide/deps"
+          ".eide/deps",
+          "BSP/inc"
         ],
         "libList": [],
         "sourceDirList": [],

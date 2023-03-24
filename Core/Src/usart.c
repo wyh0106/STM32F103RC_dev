@@ -24,28 +24,17 @@
 #include <stdio.h>
 int fputc(int ch, FILE *f)
 {
-	/* 发送一个字节数据到串口 */
-	USART_SendData(DEBUG_USART, (uint8_t) ch);
-
-	/* 等待发送完毕 */
-	while (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_TXE) == RESET)
-	{
-		NULL;
-	}	
-	
-	return (ch);
+	HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+	return ch;
 }
 
 ///重定向c库函数scanf到串口，重写向后可使用scanf、getchar等函数
 int fgetc(FILE *f)
 {
-		/* 等待串口输入数据 */
-		while (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_RXNE) == RESET)
-		{
-			NULL;
-		}
+	uint8_t ch;
 
-		return (int)USART_ReceiveData(DEBUG_USART);
+	HAL_UART_Receive( &huart1, (uint8_t*)&ch, 1, HAL_MAX_DELAY);	// 采用轮询方式接收 1字节数据，超时时间设置为无限等待
+	return ch;
 }
 
 /* USER CODE END 0 */

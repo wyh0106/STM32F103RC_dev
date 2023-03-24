@@ -59,7 +59,9 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-
+#define W25QXX_CS_GPIO_Port		GPIOA
+#define W25QXX_CS_Pin			GPIO_PIN_2
+#define RXBUFF_SIZE	8
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

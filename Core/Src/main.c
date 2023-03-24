@@ -29,6 +29,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
+// #include "stm32f1xx_it.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -38,7 +40,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define RXBUFF_SIZE	8
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -49,9 +50,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+extern uint8_t UartFlag_CB;
+
 uint8_t txData[] = {"uart test output\r\n"}, rxData[RXBUFF_SIZE] = {0}, rxcnt = 0;
 char *pIns, *pRxCh;
-uint8_t RxFlag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -108,18 +110,18 @@ int main(void)
     /* USER CODE BEGIN WHILE */
     while (1)
 	{
-		if(0 == RxFlag)
+		if(0 == UartFlag_CB)
 		{
 			NULL;
 		}
-		else if(1 == RxFlag)
+		else if(1 == UartFlag_CB)
 		{
 			pIns = strstr((char*)rxData, "pwm") + sizeof("pwm") - 1;
 			TIM2->CCR3 = (uint8_t)atoi(pIns);
 			for(uint8_t i=0;i<16;i++)
 			rxData[i] = 0;
 
-			RxFlag = 0;
+			UartFlag_CB = 0;
 		}
         // HAL_UART_Transmit_DMA(&huart1, txData, sizeof(txData));
 		// HAL_Delay(1000);
@@ -168,23 +170,6 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if('#' != *pRxCh)
-	{	
-		rxData[rxcnt] = *pRxCh;
-		HAL_UART_Receive_IT(&huart1, rxData, sizeof(rxData));
-	}
-	else
-	{
-		RxFlag = 1;
-	}
-}
-
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-    HAL_UART_DMAStop(huart);
-}
 
 /* USER CODE END 4 */
 
